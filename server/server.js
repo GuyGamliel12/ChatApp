@@ -47,20 +47,14 @@ io.use(async (socket, next) => {
 });
 
 io.on("connection", (socket) => {
-  console.log("Connected: " + socket.userId);
-
-  socket.on("disconnect", () => {
-    console.log("Disconnected: " + socket.userId);
-  });
+  socket.on("disconnect", () => {});
 
   socket.on("joinRoom", ({ chatroomId }) => {
     socket.join(chatroomId);
-    console.log("A user joined chatroom: " + chatroomId);
   });
 
   socket.on("leaveRoom", ({ chatroomId }) => {
     socket.leave(chatroomId);
-    console.log("A user left chatroom: " + chatroomId);
   });
 
   socket.on("chatroomMessage", async ({ chatroomId, message }) => {
@@ -74,8 +68,6 @@ io.on("connection", (socket) => {
         });
 
         await newMessage.save();
-
-        console.log("Message saved successfully:", message);
 
         io.to(chatroomId).emit("newMessage", {
           message,

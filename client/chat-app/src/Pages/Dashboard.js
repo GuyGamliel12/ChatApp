@@ -1,12 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import makePopup from "../Popup";
+import LogoutButton from "../Components/LogoutButton";
+import { useChatroomContext } from "../Services/ChatroomContext";
 
 const Dashboard = () => {
   const [chatrooms, setChatrooms] = useState([]);
   const [chatroomName, setChatroomName] = useState("");
   const navigate = useNavigate();
+  const { setSelectedChatroomName } = useChatroomContext();
+
+  const handleJoinChatroom = (chatroom) => {
+    setSelectedChatroomName(chatroom.name);
+    navigate(`/chatroom/${chatroom._id}`);
+  };
 
   const getChatrooms = () => {
     axios
@@ -62,7 +70,6 @@ const Dashboard = () => {
 
   const handleCreateChatroom = (event) => {
     event.preventDefault();
-    // Perform your logic to create a new chatroom using the 'chatroomName' value
   };
 
   return (
@@ -70,9 +77,12 @@ const Dashboard = () => {
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Chatroom
-            </h1>
+            <div className="flex items-center justify-between">
+              <h1 className="text-xl  font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white text-center">
+                Chatroom
+              </h1>
+              <LogoutButton />
+            </div>
             <form
               className="space-y-4 md:space-y-6"
               onSubmit={handleCreateChatroom}
@@ -105,7 +115,7 @@ const Dashboard = () => {
                   <div key={chatroom._id} className="flex mb-4 items-center">
                     <p className="w-full text-grey-darkest">{chatroom.name}</p>
                     <button
-                      onClick={() => navigate("/chatroom/" + chatroom._id)}
+                      onClick={() => handleJoinChatroom(chatroom)}
                       className="flex-no-shrink p-1 ml-4 mr-2 border-2 rounded-md px-4 bg-yellow-400"
                     >
                       <div>Join</div>

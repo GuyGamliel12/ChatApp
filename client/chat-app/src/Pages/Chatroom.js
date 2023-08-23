@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useChatroomContext } from "../Services/ChatroomContext";
 
 const ChatroomPage = ({ socket }) => {
   const { id } = useParams();
   const [messages, setMessages] = useState([]);
   const [userId, setUserId] = useState("");
   const [messageInput, setMessageInput] = useState("");
+  const navigate = useNavigate();
+  const { selectedChatroomName } = useChatroomContext();
 
   const sendMessage = () => {
     if (socket && messageInput.trim() !== "") {
@@ -50,8 +53,20 @@ const ChatroomPage = ({ socket }) => {
   return (
     <div className="bg-gray-900 h-screen flex items-center justify-center">
       <div className="w-full max-w-md p-6 rounded-lg bg-white text-white">
-        <div className="text-2xl font-semibold mb-4">Chatroom Name</div>
-        <div className="overflow-y-auto max-h-80 mb-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-semibold mb-4 text-black mt-3">
+            {selectedChatroomName}
+          </h1>
+          <button
+            className="group relative  flex justify-center py-1 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-black hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black-500"
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            Back
+          </button>
+        </div>
+        <div className="overflow-y-auto h-80 mb-4">
           {messages.map((m, i) => (
             <div
               key={i}

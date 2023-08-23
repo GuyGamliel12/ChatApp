@@ -60,3 +60,17 @@ exports.login = async (req, res) => {
     });
   }
 };
+
+exports.logout = async (req, res) => {
+  try {
+    // Implement your own logic for handling logout here.
+    // For example, you might want to invalidate the token or perform any necessary cleanup.
+    res.json({
+      message: "User logged out successfully!",
+    });
+  } catch (error) {
+    res.status(400).json({
+      error: error.toString(),
+    });
+  }
+};

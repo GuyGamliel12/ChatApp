@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import IndexPage from "./Pages/IndexPage";
+import PrivateRoute from "./Services/Routes/PrivateRoute";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
-import Dashboard from "./Pages/Dashboard";
-import Chatroom from "./Pages/Chatroom";
 import io from "socket.io-client";
 import makePopup from "./Popup";
+import BaseLayoutRoutes from "./Services/Routes/BaseLayoutRoutes";
 
 function App() {
   const [socket, setSocket] = useState(null);
@@ -41,11 +40,19 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<IndexPage />} />
         <Route path="/login" element={<Login setupSocket={setupSocket} />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard socket={socket} />} />
-        <Route path="/chatroom/:id" element={<Chatroom socket={socket} />} />
+        <Route
+          path="*"
+          exact
+          element={
+            <PrivateRoute>
+              <main>
+                <BaseLayoutRoutes socket={socket} />
+              </main>
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
